@@ -14,15 +14,21 @@ import com.supersoft.thehood.hibernate.util.HibernateUtil;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ThehoodApplication {
+public class ThehoodApplication implements CommandLineRunner{
 
 	public static void main(String[] args) {
 		SpringApplication.run(ThehoodApplication.class, args);
 
+		
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
 		Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
 
@@ -56,6 +62,7 @@ public class ThehoodApplication {
 		}catch(Exception e){
 				e.printStackTrace();	
 		}
+
 
 	}
 
