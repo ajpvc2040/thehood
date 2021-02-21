@@ -5,18 +5,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.supersoft.thehood.dto.BuddyDTO;
 
 @Entity
 @Table(name = "Buddy")
 public class Buddy{
-
-    @ManyToOne
-    @JoinColumn(name = "HouseId")
-    private House house;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "buddyId")
@@ -32,7 +27,6 @@ public class Buddy{
     private String phone;
 
     public Buddy(){
-        house = new House();
         name = "";
         email = "";
         phone = "";
@@ -42,11 +36,12 @@ public class Buddy{
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.house = new House();
     }
 
-    public void setHouse(House house){
-        this.house = house;
+    public Buddy(BuddyDTO buddy){
+        this.name = buddy.getName();
+        this.email = buddy.getEmail();
+        this.phone = buddy.getPhone();
     }
 
     public void setName(String name){
@@ -75,7 +70,7 @@ public class Buddy{
 
     @Override
     public String toString(){
-        return "Buddy [houseId=" + house.getId() + ", buddyId=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + "]";
+        return "Buddy [buddyId=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + "]";
     }
 
 }

@@ -8,17 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.supersoft.thehood.dto.DebitDTO;
 
 @Entity
 @Table(name = "Debit")
-public class Debit {
-    @ManyToOne
-    @JoinColumn(name = "houseId")
-    private House house;
-    
+public class Debit {    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "debitId")
@@ -34,7 +30,6 @@ public class Debit {
     private double amount;
 
     public Debit(){
-        house = new House();
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -48,12 +43,11 @@ public class Debit {
         this.amount = amount;
     }
 
-    public void setHouse(House house){
-        this.house = house;
-    }
-
-    public House getHouse(){
-        return this.house;
+    public Debit(DebitDTO debit){
+        this.concept = debit.getConcept();
+        this.debitDate = debit.getDebitDate();
+        this.amount = debit.getAmount();
+        this.id = debit.getId();
     }
 
     public void setConcept(String concept){
@@ -78,7 +72,7 @@ public class Debit {
 
     @Override
     public String toString(){
-        return "Debit [houseId=" + house.getId() + ", id=" + id + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
+        return "Debit [id=" + id + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
     }
 
 }

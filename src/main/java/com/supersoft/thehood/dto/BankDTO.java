@@ -3,9 +3,6 @@ package com.supersoft.thehood.dto;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.supersoft.thehood.hibernate.entity.Credit;
-import com.supersoft.thehood.hibernate.entity.Hood;
-
 public class BankDTO {
 
     private HoodDTO hood;

@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,11 +17,6 @@ import com.supersoft.thehood.dto.BankDTO;
 @Entity
 @Table(name = "Bank")
 public class Bank {
-
-    @ManyToOne
-    @JoinColumn(name = "hoodId")
-    private Hood hood;
-
     @OneToOne
     @JoinColumn(name = "creditId")
     private Credit credit;
@@ -42,7 +36,6 @@ public class Bank {
     private double amount;
 
     public Bank(){
-        hood = new Hood();
         credit = new Credit();
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -52,7 +45,6 @@ public class Bank {
     }
 
     public Bank(String concept, Date incomeDate, double amount, Credit credit){
-        this.hood = new Hood();
         this.concept = concept;
         this.incomeDate = incomeDate;
         this.amount = amount;
@@ -62,18 +54,9 @@ public class Bank {
     public Bank(BankDTO bank){
         this.amount = bank.getAmount();
         this.concept = bank.getConcept();
-        this.credit = bank.getCredit();
-        this.hood = bank.getHood();
+        this.credit = new Credit(bank.getCredit());
         this.id = bank.getId();
         this.incomeDate = bank.getIncomeDate();
-    }
-
-    public Hood getHood() {
-        return hood;
-    }
-
-    public void setHood(Hood hood) {
-        this.hood = hood;
     }
 
     public Credit getCredit() {
@@ -114,7 +97,7 @@ public class Bank {
 
     @Override
     public String toString() {
-        return "Bank [hoodId=" + hood.getId() + ", creditId=" + credit.getId() + ", id=" + id + ", incomeDate=" + incomeDate + ", concept=" + concept + ", amount=" + amount + "]";
+        return "Bank [creditId=" + credit.getId() + ", id=" + id + ", incomeDate=" + incomeDate + ", concept=" + concept + ", amount=" + amount + "]";
     }
 
 }

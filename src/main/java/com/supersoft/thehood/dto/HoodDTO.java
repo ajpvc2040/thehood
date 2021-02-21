@@ -3,10 +3,6 @@ package com.supersoft.thehood.dto;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.supersoft.thehood.hibernate.entity.Bank;
-import com.supersoft.thehood.hibernate.entity.Expense;
-import com.supersoft.thehood.hibernate.entity.House;
-
 public class HoodDTO {
     private int id;
     private String name;

@@ -8,18 +8,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.supersoft.thehood.dto.CreditDTO;
 
 @Entity
 @Table(name = "Credit")
 public class Credit {
-
-    @ManyToOne
-    @JoinColumn(name = "houseId")
-    private House house;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "creditId")
@@ -35,7 +30,6 @@ public class Credit {
     private double amount;
 
     public Credit(){
-        house = new House();
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -49,12 +43,11 @@ public class Credit {
         this.amount = amount;
     }
 
-    public House getHouse() {
-        return house;
-    }
-
-    public void setHouse(House house){
-        this.house = house;
+    public Credit(CreditDTO credit){
+        this.amount = credit.getAmount();
+        this.concept = credit.getConcept();
+        this.creditDate = credit.getCreditDate();
+        this.id = credit.getId();
     }
 
     public int getId() {
@@ -87,7 +80,7 @@ public class Credit {
 
     @Override
     public String toString(){
-        return "Credit [houseId=" + house.getId() + ", creditId=" + id + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
+        return "Credit [creditId=" + id + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
     }
     
 }

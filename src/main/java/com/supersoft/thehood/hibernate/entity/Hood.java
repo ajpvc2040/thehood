@@ -9,10 +9,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.supersoft.thehood.dto.BankDTO;
+import com.supersoft.thehood.dto.ExpenseDTO;
 import com.supersoft.thehood.dto.HoodDTO;
+import com.supersoft.thehood.dto.HouseDTO;
 
 @Entity
 @Table(name = "Hood")
@@ -29,13 +33,16 @@ public class Hood{
     @Column(name = "balance")
     private double balance;
 
-    @OneToMany(mappedBy = "hood", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hoodId")
     private Set<House> houses;
 
-    @OneToMany(mappedBy = "hood", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hoodId")
     private Set<Bank> bankEntries;
 
-    @OneToMany(mappedBy = "hood", cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "hoodId")
     private Set<Expense> expenses;
 
     public Hood(){
@@ -57,9 +64,12 @@ public class Hood{
     public Hood(HoodDTO hood){
         this.name = hood.getName();
         this.balance = hood.getBalance();
-        this.bankEntries = hood.getBankEntries();
-        this.expenses = hood.getExpenses();
-        this.houses = hood.getHouses();
+        for(BankDTO bank : hood.getBankEntries())
+            this.bankEntries.add(new Bank(bank));
+        for(ExpenseDTO expense : hood.getExpenses())
+            this.expenses.add(new Expense(expense));
+        for(HouseDTO house : hood.getHouses())
+            this.houses.add(new House(house));
         this.id = hood.getId();
     }
 
@@ -110,5 +120,17 @@ public class Hood{
         for(Expense expense : expenses)
             res.append(expense.toString() + System.lineSeparator());
         return res.toString();
+    }
+
+    public void setHouses(Set<House> houses) {
+        this.houses = houses;
+    }
+
+    public void setBankEntries(Set<Bank> bankEntries) {
+        this.bankEntries = bankEntries;
+    }
+
+    public void setExpenses(Set<Expense> expenses) {
+        this.expenses = expenses;
     }
 }

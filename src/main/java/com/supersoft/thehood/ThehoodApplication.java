@@ -39,12 +39,16 @@ public class ThehoodApplication implements CommandLineRunner{
 		Credit cfebrero2021 = new Credit("Febrero 2021", today.getTime(), 350);
 		Bank bankEntry = new Bank("Febrero 2021", today.getTime(), 350, cfebrero2021);
 		Expense gasto = new Expense("Don Manuel", today.getTime(), 800);
-		cerrada.addBankEntry(bankEntry);
-		micasa.addBuddy(yomero);
-		micasa.addCredit(cfebrero2021);
-		micasa.addDebit(febrero2021);
-		cerrada.addExpense(gasto);
-		cerrada.addHouse(micasa);
+
+		cerrada.getExpenses().add(gasto);
+		cerrada.getBankEntries().add(bankEntry);
+		cerrada.getHouses().add(micasa);
+
+		micasa.getBuddies().add(yomero);
+		micasa.getCredits().add(cfebrero2021);
+		micasa.getDebits().add(febrero2021);
+		
+
 		Transaction tran = null;
 		try(Session session = HibernateUtil.getSessionFactory().openSession()){
 			tran = session.beginTransaction();
