@@ -12,6 +12,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.supersoft.thehood.dto.HoodDTO;
+
 @Entity
 @Table(name = "Hood")
 public class Hood{
@@ -52,21 +54,27 @@ public class Hood{
         this.balance = 0;
     }
 
-    public void addHouse(House house){
-        house.setHood(this);
-        this.houses.add(house);
+    public Hood(HoodDTO hood){
+        this.name = hood.getName();
+        this.balance = hood.getBalance();
+        this.bankEntries = hood.getBankEntries();
+        this.expenses = hood.getExpenses();
+        this.houses = hood.getHouses();
+        this.id = hood.getId();
     }
 
-    public void addBankEntry(Bank bankEntry){
-        bankEntry.setHood(this);
-        bankEntries.add(bankEntry);
+    public Set<House> getHouses() {
+        return houses;
     }
 
-    public void addExpense(Expense expense){
-        expense.setHood(this);
-        expenses.add(expense);
+    public Set<Bank> getBankEntries() {
+        return bankEntries;
     }
 
+    public Set<Expense> getExpenses() {
+        return expenses;
+    }
+    
     public int getId(){
         return this.id;
     }

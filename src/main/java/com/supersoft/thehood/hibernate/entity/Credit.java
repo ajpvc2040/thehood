@@ -10,7 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -50,12 +49,16 @@ public class Credit {
         this.amount = amount;
     }
 
-    public int getId() {
-        return id;
+    public House getHouse() {
+        return house;
     }
 
     public void setHouse(House house){
         this.house = house;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public void setConcept(String concept){

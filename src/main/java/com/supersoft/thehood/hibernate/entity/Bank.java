@@ -13,6 +13,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.ibm.icu.util.Calendar;
+import com.supersoft.thehood.dto.BankDTO;
 
 @Entity
 @Table(name = "Bank")
@@ -58,6 +59,15 @@ public class Bank {
         this.credit = credit;
     }
 
+    public Bank(BankDTO bank){
+        this.amount = bank.getAmount();
+        this.concept = bank.getConcept();
+        this.credit = bank.getCredit();
+        this.hood = bank.getHood();
+        this.id = bank.getId();
+        this.incomeDate = bank.getIncomeDate();
+    }
+
     public Hood getHood() {
         return hood;
     }
@@ -72,6 +82,10 @@ public class Bank {
 
     public void setCredit(Credit credit) {
         this.credit = credit;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getConcept() {
