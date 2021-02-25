@@ -40,7 +40,7 @@ public class HoodController{
         return hoods;
     }
 
-    @PostMapping("hoods")
+    @PostMapping("newHood")
     public Hood newHood(@RequestBody HoodDTO newHood) {
 
         this.newHood = new Hood(newHood);
