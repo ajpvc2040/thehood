@@ -4,14 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class ExpenseDTO {
-    private HoodDTO hood;
-    private int id;
+    private int hoodId;
+    private int expenseId;
     private String concept;
     private Date expenseDate;
     private double amount;
 
     public ExpenseDTO(){
-        hood = new HoodDTO();
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -19,20 +18,20 @@ public class ExpenseDTO {
         amount = 0;
     }
 
-    public HoodDTO getHood() {
-        return hood;
+    public int getExpenseId() {
+        return expenseId;
     }
 
-    public void setHood(HoodDTO hood) {
-        this.hood = hood;
+    public void setExpenseId(int expenseId) {
+        this.expenseId = expenseId;
     }
 
-    public int getId() {
-        return id;
+    public int getHoodId() {
+        return hoodId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 
     public String getConcept() {

@@ -1,33 +1,33 @@
 package com.supersoft.thehood.dto;
 
 public class BuddyDTO {
-    private HouseDTO house;
-    private int id;
+    
+    private int houseId;
+    private int buddyId;
     private String name;
     private String email;
     private String phone;
 
     public BuddyDTO(){
-        house = new HouseDTO();
         name = "";
         email = "";
         phone = "";
     }
 
-    public HouseDTO getHouse() {
-        return house;
+    public int getHouseId() {
+        return houseId;
     }
 
-    public void setHouse(HouseDTO house) {
-        this.house = house;
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
-    public int getId() {
-        return id;
+    public int getBuddyId() {
+        return buddyId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setBuddyId(int buddyId) {
+        this.buddyId = buddyId;
     }
 
     public String getName() {

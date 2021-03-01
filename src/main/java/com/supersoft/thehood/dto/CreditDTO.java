@@ -4,14 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CreditDTO {
-    private HouseDTO house;
-    private int id;
+    private int houseId;
+    private int creditId;
     private String concept;
     private Date creditDate;
     private double amount;
 
     public CreditDTO(){
-        house = new HouseDTO();
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
@@ -19,20 +18,20 @@ public class CreditDTO {
         amount = 0;
     }
 
-    public HouseDTO getHouse() {
-        return house;
+    public int getHouseId() {
+        return houseId;
     }
 
-    public void setHouse(HouseDTO house) {
-        this.house = house;
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
-    public int getId() {
-        return id;
+    public int getCreditId() {
+        return creditId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCreditId(int creditId) {
+        this.creditId = creditId;
     }
 
     public String getConcept() {

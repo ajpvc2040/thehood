@@ -61,8 +61,10 @@ public class ThehoodApplication implements CommandLineRunner{
 		}
 
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
+			tran = session.beginTransaction();
 			List<Hood> hoods = session.createQuery("from Hood", Hood.class).list();
 			hoods.forEach(s->System.err.println(s.toString()));
+			tran.commit();
 		}catch(Exception e){
 				e.printStackTrace();	
 		}

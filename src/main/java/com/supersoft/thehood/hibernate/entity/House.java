@@ -25,7 +25,7 @@ public class House {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "houseId")
-    private int id;
+    private int houseId;
 
     @Column(name = "houseCode")
     private String houseCode;
@@ -62,6 +62,7 @@ public class House {
     }
 
     public House(HouseDTO house){
+        this.houseId = house.getHouseId();
         this.houseCode = house.getHouseCode();
         this.balance = house.getBalance();
         this.buddies = new HashSet<Buddy>();
@@ -75,8 +76,12 @@ public class House {
             this.credits.add(new Credit(credit));
     }
 
-    public int getId(){
-        return id;
+    public int getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
     public Set<Buddy> getBuddies(){
@@ -102,7 +107,7 @@ public class House {
     @Override
     public String toString(){
         StringBuilder res = new StringBuilder();
-        res.append("House [id=" + this.id + ", houseCode=" + this.houseCode + ", balance=" + this.balance + "]" + System.lineSeparator());
+        res.append("House [id=" + this.houseId + ", houseCode=" + this.houseCode + ", balance=" + this.balance + "]" + System.lineSeparator());
 
         for(Buddy buddy : buddies)
             res.append(buddy.toString() + System.lineSeparator());
@@ -114,10 +119,6 @@ public class House {
             res.append(credit.toString() + System.lineSeparator());
 
         return res.toString();
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setBuddies(Set<Buddy> buddies) {

@@ -4,8 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class HouseDTO {
-    private HoodDTO hood;
-    private int id;
+    private int hoodId;
+    private int houseId;
     private String houseCode;
     private double balance;
     private Set<BuddyDTO> buddies;
@@ -15,26 +15,25 @@ public class HouseDTO {
     public HouseDTO(){
         houseCode = "";
         balance = 0;
-        hood = new HoodDTO();
         buddies = new HashSet<BuddyDTO>();
         debits = new HashSet<DebitDTO>();
         credits = new HashSet<CreditDTO>();
     }
 
-    public HoodDTO getHood() {
-        return hood;
+    public int getHoodId() {
+        return hoodId;
     }
 
-    public void setHood(HoodDTO hood) {
-        this.hood = hood;
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 
-    public int getId() {
-        return id;
+    public int getHouseId() {
+        return houseId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
     public String getHouseCode() {

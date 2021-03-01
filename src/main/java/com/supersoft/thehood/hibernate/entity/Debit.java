@@ -18,7 +18,7 @@ public class Debit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "debitId")
-    private int id;
+    private int debitId;
 
     @Column(name = "concept")
     private String concept;
@@ -47,7 +47,15 @@ public class Debit {
         this.concept = debit.getConcept();
         this.debitDate = debit.getDebitDate();
         this.amount = debit.getAmount();
-        this.id = debit.getId();
+        this.debitId = debit.getDebitId();
+    }
+
+    public int getDebitId() {
+        return debitId;
+    }
+
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
     }
 
     public void setConcept(String concept){
@@ -72,7 +80,7 @@ public class Debit {
 
     @Override
     public String toString(){
-        return "Debit [id=" + id + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
+        return "Debit [id=" + debitId + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
     }
 
 }

@@ -18,7 +18,7 @@ public class Expense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "expenseId")
-    private int id;
+    private int expenseId;
 
     @Column(name = "concept")
     private String concept;
@@ -44,10 +44,18 @@ public class Expense {
     }
 
     public Expense(ExpenseDTO expense){
+        this.expenseId = expense.getExpenseId();
         this.concept = expense.getConcept();
         this.expenseDate = expense.getExpenseDate();
         this.amount = expense.getAmount();
-        this.id = expense.getId();
+    }
+
+    public int getExpenseId() {
+        return expenseId;
+    }
+
+    public void setExpenseId(int expenseId) {
+        this.expenseId = expenseId;
     }
 
     public String getConcept() {
@@ -76,6 +84,6 @@ public class Expense {
 
     @Override
     public String toString() {
-        return "Expense [expenseId =" + id + ", expenseDate=" + expenseDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
+        return "Expense [expenseId =" + expenseId + ", expenseDate=" + expenseDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
     }
 }

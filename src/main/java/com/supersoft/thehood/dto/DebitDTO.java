@@ -4,35 +4,34 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DebitDTO {
-    private HouseDTO house;
-    private int id;
+    private int houseId;
+    private int debitId;
     private String concept;
     private Date debitDate;
     private double amount;
 
     public DebitDTO(){
-        house = new HouseDTO();
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         debitDate = today.getTime();
         amount = 0;
     }
-
-    public HouseDTO getHouse() {
-        return house;
+    
+    public int getHouseId() {
+        return houseId;
     }
 
-    public void setHouse(HouseDTO house) {
-        this.house = house;
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
-    public int getId() {
-        return id;
+    public int getDebitId() {
+        return debitId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
     }
 
     public String getConcept() {

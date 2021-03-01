@@ -3,11 +3,15 @@ package com.supersoft.thehood.hibernate.entity;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.supersoft.thehood.dto.CreditDTO;
@@ -18,7 +22,7 @@ public class Credit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "creditId")
-    private int id;
+    private int creditId;
 
     @Column(name = "concept")
     private String concept;
@@ -29,29 +33,40 @@ public class Credit {
     @Column(name = "amount")
     private double amount;
 
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "creditId")
+    private Expense expense;
+
     public Credit(){
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         creditDate = today.getTime();
         amount = 0;
+        expense = new Expense();
     }
 
     public Credit(String concept, Date creditDate, double amount){
         this.concept = concept;
         this.creditDate = creditDate;
         this.amount = amount;
+        this.expense = new Expense (concept, creditDate, amount);
     }
 
     public Credit(CreditDTO credit){
         this.amount = credit.getAmount();
         this.concept = credit.getConcept();
         this.creditDate = credit.getCreditDate();
-        this.id = credit.getId();
+        this.creditId = credit.getCreditId();
+        this.expense = new Expense();
     }
 
-    public int getId() {
-        return id;
+    public int getCreditId() {
+        return creditId;
+    }
+
+    public void setCreditId(int creditId) {
+        this.creditId = creditId;
     }
 
     public void setConcept(String concept){
@@ -80,7 +95,7 @@ public class Credit {
 
     @Override
     public String toString(){
-        return "Credit [creditId=" + id + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
+        return "Credit [creditId=" + creditId + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
     }
     
 }

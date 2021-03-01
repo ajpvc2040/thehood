@@ -15,7 +15,7 @@ public class Buddy{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "buddyId")
-    private int id;
+    private int buddyId;
 
     @Column(name = "name")
     private String name;
@@ -39,9 +39,18 @@ public class Buddy{
     }
 
     public Buddy(BuddyDTO buddy){
+        this.buddyId = buddy.getBuddyId();
         this.name = buddy.getName();
         this.email = buddy.getEmail();
         this.phone = buddy.getPhone();
+    }
+
+    public int getBuddyId() {
+        return buddyId;
+    }
+
+    public void setBuddyId(int buddyId) {
+        this.buddyId = buddyId;
     }
 
     public void setName(String name){
@@ -70,7 +79,7 @@ public class Buddy{
 
     @Override
     public String toString(){
-        return "Buddy [buddyId=" + id + ", name=" + name + ", email=" + email + ", phone=" + phone + "]";
+        return "Buddy [buddyId=" + buddyId + ", name=" + name + ", email=" + email + ", phone=" + phone + "]";
     }
 
 }

@@ -7,24 +7,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.ibm.icu.util.Calendar;
 import com.supersoft.thehood.dto.BankDTO;
 
+
 @Entity
 @Table(name = "Bank")
 public class Bank {
-    @OneToOne
-    @JoinColumn(name = "creditId")
-    private Credit credit;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "bankId")
-    private int id;
+    private int bankId;
+
+    @Column(name = "creditId")
+    private int creditId;
 
     @Column(name = "incomeDate")
     private Date incomeDate;
@@ -36,7 +34,6 @@ public class Bank {
     private double amount;
 
     public Bank(){
-        credit = new Credit();
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         incomeDate = today.getTime();
@@ -48,27 +45,31 @@ public class Bank {
         this.concept = concept;
         this.incomeDate = incomeDate;
         this.amount = amount;
-        this.credit = credit;
+        this.creditId= credit.getCreditId();
     }
 
     public Bank(BankDTO bank){
+        this.bankId = bank.getBankId();
+        this.creditId = bank.getCreditId();
         this.amount = bank.getAmount();
         this.concept = bank.getConcept();
-        this.credit = new Credit(bank.getCredit());
-        this.id = bank.getId();
         this.incomeDate = bank.getIncomeDate();
     }
 
-    public Credit getCredit() {
-        return credit;
+    public int getBankId() {
+        return bankId;
     }
 
-    public void setCredit(Credit credit) {
-        this.credit = credit;
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
     }
 
-    public int getId() {
-        return id;
+    public int getCreditId() {
+        return creditId;
+    }
+
+    public void setCreditId(int creditId) {
+        this.creditId = creditId;
     }
 
     public String getConcept() {
@@ -97,7 +98,7 @@ public class Bank {
 
     @Override
     public String toString() {
-        return "Bank [creditId=" + credit.getId() + ", id=" + id + ", incomeDate=" + incomeDate + ", concept=" + concept + ", amount=" + amount + "]";
+        return "Bank [creditId=" + creditId + ", id=" + bankId + ", incomeDate=" + incomeDate + ", concept=" + concept + ", amount=" + amount + "]";
     }
 
 }

@@ -5,17 +5,15 @@ import java.util.Date;
 
 public class BankDTO {
 
-    private HoodDTO hood;
-    private CreditDTO credit;
-    private int id;
+    private int hoodId;
+    private int creditId;
+    private int bankId;
     private Date incomeDate;
     private String concept;
     private double amount;
     
 
     public BankDTO(){
-        hood = new HoodDTO();
-        credit = new CreditDTO();
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         incomeDate = today.getTime();
@@ -23,16 +21,32 @@ public class BankDTO {
         amount = 0;
     }
 
-    public HoodDTO getHood() {
-        return hood;
+    public int getHoodId() {
+        return hoodId;
     }
 
-    public void setHood(HoodDTO hood) {
-        this.hood = hood;
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
+    }
+
+    public int getCreditId() {
+        return creditId;
+    }
+
+    public void setCreditId(int creditId) {
+        this.creditId = creditId;
     }
 
     public double getAmount() {
         return amount;
+    }
+
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
+    }
+
+    public int getBankId() {
+        return bankId;
     }
 
     public void setAmount(double amount) {
@@ -45,22 +59,6 @@ public class BankDTO {
 
     public void setConcept(String concept) {
         this.concept = concept;
-    }
-
-    public CreditDTO getCredit() {
-        return credit;
-    }
-
-    public void setCredit(CreditDTO credit) {
-        this.credit = credit;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public Date getIncomeDate() {

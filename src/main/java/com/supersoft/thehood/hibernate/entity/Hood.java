@@ -26,7 +26,7 @@ public class Hood{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hoodId")
-    private int id;
+    private int hoodId;
 
     @Column(name = "name")
     private String name;
@@ -38,11 +38,11 @@ public class Hood{
     @JoinColumn(name = "hoodId")
     private Set<House> houses;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "hoodId")
     private Set<Bank> bankEntries;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "hoodId")
     private Set<Expense> expenses;
 
@@ -64,14 +64,16 @@ public class Hood{
 
     public Hood(HoodDTO hood){
         this.name = hood.getName();
-        this.balance = hood.getBalance();
+        this.bankEntries = new HashSet<Bank>();
+        this.expenses = new HashSet<Expense>();
+        this.houses = new HashSet<House>();
         for(BankDTO bank : hood.getBankEntries())
             this.bankEntries.add(new Bank(bank));
         for(ExpenseDTO expense : hood.getExpenses())
             this.expenses.add(new Expense(expense));
         for(HouseDTO house : hood.getHouses())
             this.houses.add(new House(house));
-        this.id = hood.getId();
+        this.hoodId = hood.getHoodId();
     }
 
     public Set<House> getHouses() {
@@ -86,12 +88,12 @@ public class Hood{
         return expenses;
     }
     
-    public int getId(){
-        return this.id;
+    public int getHoodId() {
+        return hoodId;
     }
 
-    public void setId(int id){
-        this.id = id;
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
     
     public String getName(){
@@ -113,7 +115,7 @@ public class Hood{
     @Override
     public String toString(){
         StringBuilder res = new StringBuilder();
-        res.append("Hood [id=" + this.id + ", name=" + this.name + "]" + System.lineSeparator());
+        res.append("Hood [id=" + this.hoodId + ", name=" + this.name + "]" + System.lineSeparator());
         for(House house : houses)
             res.append(house.toString() + System.lineSeparator());
         for(Bank bankEntry : bankEntries)

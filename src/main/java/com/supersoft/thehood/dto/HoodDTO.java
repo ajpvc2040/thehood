@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class HoodDTO {
-    private int id;
+    private int hoodId;
     private String name;
     private double balance;
     private Set<HouseDTO> houses;
@@ -19,12 +19,12 @@ public class HoodDTO {
         this.balance = 0;
     }
 
-    public int getId() {
-        return id;
+    public int getHoodId() {
+        return hoodId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 
     public String getName() {
