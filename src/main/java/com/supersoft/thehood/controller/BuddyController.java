@@ -5,13 +5,14 @@ import java.util.List;
 
 import javax.persistence.Query;
 
-import com.supersoft.thehood.dto.HouseDTO;
-import com.supersoft.thehood.hibernate.entity.Hood;
+import com.supersoft.thehood.dto.BuddyDTO;
+import com.supersoft.thehood.hibernate.entity.Buddy;
 import com.supersoft.thehood.hibernate.entity.House;
 import com.supersoft.thehood.hibernate.util.HibernateUtil;
 
 import org.hibernate.Transaction;
 import org.hibernate.Session;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,65 +25,65 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/")
-public class HouseController{
+public class BuddyController {
 
-    @GetMapping("houses")
-    public List<House> getHouses(@RequestParam int hoodId) {
+    @GetMapping("buddies")
+    public List<Buddy> getBuddies(@RequestParam int houseId) {
 
         Transaction tran = null;
-        Hood parentHood = new Hood();
-        List<House> returnableList = new ArrayList<House>();
+        House parentHouse = new House();
+        List<Buddy> returnableList = new ArrayList<Buddy>();
 
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             tran = session.beginTransaction();
 
-            Query query = session.createQuery("from Hood H where H.hoodId = :hoodID");
-            query.setParameter("hoodID", hoodId);
-            parentHood = (Hood)query.getSingleResult();
+            Query query = session.createQuery("from House H where H.houseId = :houseId");
+            query.setParameter("houseId", houseId);
+            parentHouse = (House)query.getSingleResult();
             tran.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for(House house : parentHood.getHouses())
-            returnableList.add(house);
+        for(Buddy buddy : parentHouse.getBuddies())
+            returnableList.add(buddy);
 
         return returnableList;
     }
 
-    @PostMapping("newHouse")
-    public House newHouse(@RequestBody HouseDTO house) {
+    @PostMapping("newBuddy")
+    public Buddy newBuddy(@RequestBody BuddyDTO buddy) {
 
-        Hood parentHood;
-        House newHouse = new House(house);
+        House parentHouse;
+        Buddy newBuddy = new Buddy(buddy);
         Transaction tran = null;
 
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            Query query = session.createQuery("from Hood H where H.hoodId = :hoodID");
-            query.setParameter("hoodID", house.getHoodId());
-            parentHood = (Hood)query.getSingleResult();
+            Query query = session.createQuery("from House H where H.houseId = :houseId");
+            query.setParameter("houseId", buddy.getHouseId());
+            parentHouse = (House)query.getSingleResult();
 
-            parentHood.getHouses().add(newHouse);
-			session.saveOrUpdate(parentHood);
+            parentHouse.getBuddies().add(newBuddy);
+			session.saveOrUpdate(parentHouse);
 			tran.commit();
 		}
 		catch(Exception e){
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-        return newHouse;
+        return newBuddy;
     }
 
-    @DeleteMapping("deleteHouse")
-    public void deleteHood(@RequestBody HouseDTO house){
-        House deleteHouse = new House(house);
+    @DeleteMapping("deleteBuddy")
+    public void deleteBuddy(@RequestBody BuddyDTO buddy){
+        Buddy deleteBuddy = new Buddy(buddy);
         Transaction tran = null;
 
         try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
-			session.delete(deleteHouse);
+			session.delete(deleteBuddy);
 			tran.commit();
 		}
 		catch(Exception e){
@@ -91,5 +92,5 @@ public class HouseController{
 		}
 
     }
-
+    
 }
