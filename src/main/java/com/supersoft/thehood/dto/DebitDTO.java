@@ -9,6 +9,7 @@ public class DebitDTO {
     private String concept;
     private Date debitDate;
     private double amount;
+    private boolean paid;
 
     public DebitDTO(){
         concept = "";
@@ -56,6 +57,14 @@ public class DebitDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
     
 }

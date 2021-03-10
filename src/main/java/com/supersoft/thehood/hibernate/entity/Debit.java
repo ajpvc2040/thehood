@@ -29,18 +29,23 @@ public class Debit {
     @Column(name = "amount")
     private double amount;
 
+    @Column(name = "paid")
+    private boolean paid;
+
     public Debit(){
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         debitDate = today.getTime();
         amount = 0;
+        paid = false;
     }
 
     public Debit(String concept, Date debitDate, double amount){
         this.concept = concept ;
         this.debitDate = debitDate;
         this.amount = amount;
+        this.paid = false;
     }
 
     public Debit(DebitDTO debit){
@@ -48,6 +53,7 @@ public class Debit {
         this.debitDate = debit.getDebitDate();
         this.amount = debit.getAmount();
         this.debitId = debit.getDebitId();
+        this.paid = debit.isPaid();
     }
 
     public int getDebitId() {
@@ -76,6 +82,14 @@ public class Debit {
 
     public void setAmount(double amount){
         this.amount = amount;
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
     }
 
     @Override
