@@ -89,7 +89,7 @@ public class Credit {
         this.amount = amount;
     }
 
-    public double getAmoung(){
+    public double getAmount(){
         return this.amount;
     }
 

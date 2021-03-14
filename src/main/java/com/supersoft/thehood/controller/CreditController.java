@@ -2,7 +2,9 @@ package com.supersoft.thehood.controller;
 
 import javax.persistence.Query;
 
+import com.supersoft.thehood.dto.CreditDTO;
 import com.supersoft.thehood.dto.DebitDTO;
+import com.supersoft.thehood.hibernate.entity.Credit;
 import com.supersoft.thehood.hibernate.entity.Debit;
 import com.supersoft.thehood.hibernate.entity.Hood;
 import com.supersoft.thehood.hibernate.entity.House;
@@ -20,42 +22,38 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("api/")
-public class DebitController {
+public class CreditController {
 
-    @PostMapping("newDebit")
-    public Debit newDebit(@RequestBody DebitDTO debit) {
+    @PostMapping("newCredit")
+    public Credit newCredit(@RequestBody CreditDTO credit) {
 
         Hood parentHood;
-        House parentHouse;
-        Debit newDebit = new Debit(debit);
+        Credit newCredit = new Credit(credit);
         Transaction tran = null;
         Query query;
 
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            if(debit.getHouseId() > 0){
-                query = session.createQuery("from House H where H.houseId = :houseId");
-                query.setParameter("houseId", debit.getHouseId());
-                parentHouse = (House) query.getSingleResult();
-                parentHouse.addDebit(newDebit);
-                session.saveOrUpdate(parentHouse);
-            }
-            else{
-                query = session.createQuery("from Hood H where H.hoodId = :hoodId");
-                query.setParameter("hoodId", debit.getHoodId());
-                parentHood = (Hood) query.getSingleResult();
-                for(House house : parentHood.getHouses())
-                    house.addDebit(new Debit(newDebit));
-                session.saveOrUpdate(parentHood);
-            }
+            query = session.createQuery("from Hood H where H.hoodId = :hoodId");
+            query.setParameter("hoodId", credit.getHoodId());
+            parentHood = (Hood) query.getSingleResult();
+
+            for(House house : parentHood.getHouses())
+                if(house.getHouseId() == credit.getHouseId()){
+                    house.addCredit(newCredit);
+                    parentHood.addBank(newCredit);
+                }                    
+
+            session.saveOrUpdate(parentHood);
+            
 			tran.commit();
 		}
 		catch(Exception e){
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-        return newDebit;
+        return newCredit;
     }
     
 }

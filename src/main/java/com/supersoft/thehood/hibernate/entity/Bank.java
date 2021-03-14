@@ -41,10 +41,10 @@ public class Bank {
         amount = 0;
     }
 
-    public Bank(String concept, Date incomeDate, double amount, Credit credit){
-        this.concept = concept;
-        this.incomeDate = incomeDate;
-        this.amount = amount;
+    public Bank(Credit credit){
+        this.concept = credit.getConcept();
+        this.incomeDate = credit.getCreditDate();
+        this.amount = credit.getAmount();
         this.creditId= credit.getCreditId();
     }
 

@@ -76,6 +76,16 @@ public class House {
             this.credits.add(new Credit(credit));
     }
 
+    public void addDebit(Debit debit){
+        this.debits.add(debit);
+        this.balance -= debit.getAmount();
+    }
+
+    public void addCredit(Credit credit){
+        this.credits.add(credit);
+        this.balance += credit.getAmount();
+    }
+
     public int getHouseId() {
         return houseId;
     }

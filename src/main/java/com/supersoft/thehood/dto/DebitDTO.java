@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class DebitDTO {
+    private int hoodId;
     private int houseId;
     private int debitId;
     private String concept;
@@ -65,6 +66,14 @@ public class DebitDTO {
 
     public void setPaid(boolean paid) {
         this.paid = paid;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
     
 }

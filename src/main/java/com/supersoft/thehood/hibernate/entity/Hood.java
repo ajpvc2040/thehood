@@ -76,6 +76,16 @@ public class Hood{
         this.hoodId = hood.getHoodId();
     }
 
+    public void addExpense(Expense expense){
+        this.expenses.add(expense);
+        this.balance -= expense.getAmount();
+    }
+
+    public void addBank(Credit credit){
+        this.bankEntries.add(new Bank(credit));
+        this.balance += credit.getAmount();
+    }
+
     public Set<House> getHouses() {
         return houses;
     }

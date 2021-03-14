@@ -48,6 +48,13 @@ public class Debit {
         this.paid = false;
     }
 
+    public Debit(Debit debit){
+        this.amount = debit.amount;
+        this.concept = debit.concept;
+        this.debitDate = debit.debitDate;
+        this.paid = debit.paid;
+    }
+
     public Debit(DebitDTO debit){
         this.concept = debit.getConcept();
         this.debitDate = debit.getDebitDate();
@@ -95,6 +102,10 @@ public class Debit {
     @Override
     public String toString(){
         return "Debit [id=" + debitId + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
+    }
+
+    public double getAmount() {
+        return amount;
     }
 
 }

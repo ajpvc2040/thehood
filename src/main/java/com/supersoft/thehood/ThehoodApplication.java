@@ -29,7 +29,7 @@ public class ThehoodApplication implements CommandLineRunner{
 
 	@Override
 	public void run(String... args) throws Exception {
-		Calendar today = Calendar.getInstance();
+		/*Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
 
 		Hood cerrada = new Hood("Primero");
@@ -37,7 +37,7 @@ public class ThehoodApplication implements CommandLineRunner{
 		Buddy yomero = new Buddy("Art", "sdaf", "sadf");
 		Debit febrero2021 = new Debit("Febrero 2021", today.getTime(), 400);
 		Credit cfebrero2021 = new Credit("Febrero 2021", today.getTime(), 350);
-		Bank bankEntry = new Bank("Febrero 2021", today.getTime(), 350, cfebrero2021);
+		Bank bankEntry = new Bank(cfebrero2021);
 		Expense gasto = new Expense("Don Manuel", today.getTime(), 800);
 
 		cerrada.getExpenses().add(gasto);
@@ -46,13 +46,13 @@ public class ThehoodApplication implements CommandLineRunner{
 
 		micasa.getBuddies().add(yomero);
 		micasa.getCredits().add(cfebrero2021);
-		micasa.getDebits().add(febrero2021);
+		micasa.getDebits().add(febrero2021);*/
 		
 
 		Transaction tran = null;
 		try(Session session = HibernateUtil.getSessionFactory().openSession()){
 			tran = session.beginTransaction();
-			session.saveOrUpdate(cerrada);
+			//session.saveOrUpdate(cerrada);
 			tran.commit();
 		}
 		catch(Exception e){
@@ -60,16 +60,14 @@ public class ThehoodApplication implements CommandLineRunner{
 			e.printStackTrace();
 		}
 
-		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
+		/*try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 			List<Hood> hoods = session.createQuery("from Hood", Hood.class).list();
 			hoods.forEach(s->System.err.println(s.toString()));
 			tran.commit();
 		}catch(Exception e){
 				e.printStackTrace();	
-		}
-
-
+		}*/
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class CreditDTO {
+    private int hoodId;
     private int houseId;
     private int creditId;
     private String concept;
@@ -56,5 +57,13 @@ public class CreditDTO {
 
     public void setAmount(double amount) {
         this.amount = amount;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 }
