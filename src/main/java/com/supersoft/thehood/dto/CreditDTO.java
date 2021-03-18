@@ -7,6 +7,7 @@ public class CreditDTO {
     private int hoodId;
     private int houseId;
     private int creditId;
+    private int debitId;
     private String concept;
     private Date creditDate;
     private double amount;
@@ -65,5 +66,13 @@ public class CreditDTO {
 
     public void setHoodId(int hoodId) {
         this.hoodId = hoodId;
+    }
+
+    public int getDebitId() {
+        return debitId;
+    }
+
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
     }
 }

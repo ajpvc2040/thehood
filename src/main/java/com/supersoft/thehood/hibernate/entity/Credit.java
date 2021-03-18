@@ -24,6 +24,9 @@ public class Credit {
     @Column(name = "creditId")
     private int creditId;
 
+    @Column(name = "debitId")
+    private int debitId;
+
     @Column(name = "concept")
     private String concept;
 
@@ -33,24 +36,20 @@ public class Credit {
     @Column(name = "amount")
     private double amount;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "creditId")
-    private Expense expense;
-
     public Credit(){
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         creditDate = today.getTime();
         amount = 0;
-        expense = new Expense();
+        debitId = 0;
     }
 
     public Credit(String concept, Date creditDate, double amount){
         this.concept = concept;
         this.creditDate = creditDate;
         this.amount = amount;
-        this.expense = new Expense (concept, creditDate, amount);
+        debitId = 0;
     }
 
     public Credit(CreditDTO credit){
@@ -58,7 +57,7 @@ public class Credit {
         this.concept = credit.getConcept();
         this.creditDate = credit.getCreditDate();
         this.creditId = credit.getCreditId();
-        this.expense = new Expense();
+        this.debitId = credit.getDebitId();
     }
 
     public int getCreditId() {
@@ -96,6 +95,14 @@ public class Credit {
     @Override
     public String toString(){
         return "Credit [creditId=" + creditId + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
+    }
+
+    public int getDebitId() {
+        return debitId;
+    }
+
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
     }
     
 }
