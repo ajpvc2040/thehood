@@ -4,9 +4,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.ibm.icu.util.Calendar;
@@ -21,7 +24,20 @@ public class Bank {
     @Column(name = "bankId")
     private int bankId;
 
-    @Column(name = "creditId")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creditId")
+    private Credit credit;
+
+    @Column(name = "hoodId_")
+    private int hoodId;
+
+    @Column(name = "houseId_")
+    private int houseId;
+
+    @Column(name = "debitId_")
+    private int debitId;
+
+    @Column(name = "creditId_")
     private int creditId;
 
     @Column(name = "incomeDate")
@@ -45,7 +61,7 @@ public class Bank {
         this.concept = credit.getConcept();
         this.incomeDate = credit.getCreditDate();
         this.amount = credit.getAmount();
-        this.creditId= credit.getCreditId();
+        this.creditId = credit.getCreditId();
     }
 
     public Bank(BankDTO bank){
@@ -99,6 +115,38 @@ public class Bank {
     @Override
     public String toString() {
         return "Bank [creditId=" + creditId + ", id=" + bankId + ", incomeDate=" + incomeDate + ", concept=" + concept + ", amount=" + amount + "]";
+    }
+
+    public Credit getCredit() {
+        return credit;
+    }
+
+    public void setCredit(Credit credit) {
+        this.credit = credit;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
+    }
+
+    public int getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
+    }
+
+    public int getDebitId() {
+        return debitId;
+    }
+
+    public void setDebitId(int debitId) {
+        this.debitId = debitId;
     }
 
 }

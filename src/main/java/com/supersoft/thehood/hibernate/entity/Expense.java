@@ -5,9 +5,12 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.supersoft.thehood.dto.ExpenseDTO;
@@ -19,6 +22,13 @@ public class Expense {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "expenseId")
     private int expenseId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hoodId")
+    private Hood hood;
+
+    @Column(name = "hoodId_")
+    private int hoodId;
 
     @Column(name = "concept")
     private String concept;
@@ -85,5 +95,21 @@ public class Expense {
     @Override
     public String toString() {
         return "Expense [expenseId =" + expenseId + ", expenseDate=" + expenseDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
+    }
+
+    public Hood getHood() {
+        return hood;
+    }
+
+    public void setHood(Hood hood) {
+        this.hood = hood;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 }

@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,7 +25,17 @@ public class Credit {
     @Column(name = "creditId")
     private int creditId;
 
-    @Column(name = "debitId")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "debitId")
+    private Debit debit;
+
+    @Column(name = "hoodId_")
+    private int hoodId;
+
+    @Column(name = "houseId_")
+    private int houseId;
+
+    @Column(name = "debitId_")
     private int debitId;
 
     @Column(name = "concept")
@@ -36,20 +47,22 @@ public class Credit {
     @Column(name = "amount")
     private double amount;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "creditId")
+    private Bank bank;
+
     public Credit(){
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         creditDate = today.getTime();
         amount = 0;
-        debitId = 0;
     }
 
     public Credit(String concept, Date creditDate, double amount){
         this.concept = concept;
         this.creditDate = creditDate;
         this.amount = amount;
-        debitId = 0;
     }
 
     public Credit(CreditDTO credit){
@@ -57,7 +70,7 @@ public class Credit {
         this.concept = credit.getConcept();
         this.creditDate = credit.getCreditDate();
         this.creditId = credit.getCreditId();
-        this.debitId = credit.getDebitId();
+        this.bank = new Bank(this);
     }
 
     public int getCreditId() {
@@ -97,12 +110,52 @@ public class Credit {
         return "Credit [creditId=" + creditId + ", concept=" + concept + ", creditDate=" + creditDate.toString() + ", amount=" + amount + "]";
     }
 
+    public Debit getDebit() {
+        return debit;
+    }
+
+    public void setDebit(Debit debit) {
+        this.debit = debit;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
+    }
+
+    public int getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
+    }
+
     public int getDebitId() {
         return debitId;
     }
 
     public void setDebitId(int debitId) {
         this.debitId = debitId;
+    }
+
+    public void addBank(Bank bank){
+        bank.setHoodId(this.hoodId);
+        bank.setHouseId(this.houseId);
+        bank.setDebitId(this.debitId);
+        bank.setCreditId(this.creditId);
+        this.bank = bank;
+    }
+
+    public void setBank(Bank bank) {
+        this.bank = bank;
+    }
+
+    public void loadLazyBank(){
+        this.bank.getBankId();
     }
     
 }

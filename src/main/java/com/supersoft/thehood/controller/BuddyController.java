@@ -28,31 +28,31 @@ import org.springframework.web.bind.annotation.RestController;
 public class BuddyController {
 
     @GetMapping("buddies")
-    public List<Buddy> getBuddies(@RequestParam int houseId) {
+    public List<BuddyDTO> getBuddies(@RequestParam int houseId) {
 
         Transaction tran = null;
-        House parentHouse = new House();
-        List<Buddy> returnableList = new ArrayList<Buddy>();
+        List<BuddyDTO> returnableList = new ArrayList<BuddyDTO>();
+        List<Buddy> buddies = new ArrayList<Buddy>();
 
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             tran = session.beginTransaction();
 
-            Query query = session.createQuery("from House H where H.houseId = :houseId");
+            Query query = session.createQuery("from Buddy B where B.houseId = :houseId");
             query.setParameter("houseId", houseId);
-            parentHouse = (House)query.getSingleResult();
+            buddies = query.getResultList();
             tran.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for(Buddy buddy : parentHouse.getBuddies())
-            returnableList.add(buddy);
+        for(Buddy buddy : buddies)
+            returnableList.add(new BuddyDTO(buddy));
 
         return returnableList;
     }
 
     @PostMapping("newBuddy")
-    public Buddy newBuddy(@RequestBody BuddyDTO buddy) {
+    public BuddyDTO newBuddy(@RequestBody BuddyDTO buddy) {
 
         House parentHouse;
         Buddy newBuddy = new Buddy(buddy);
@@ -61,11 +61,9 @@ public class BuddyController {
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            Query query = session.createQuery("from House H where H.houseId = :houseId");
-            query.setParameter("houseId", buddy.getHouseId());
-            parentHouse = (House)query.getSingleResult();
+            parentHouse = (House)session.get(House.class, buddy.getHouseId());
 
-            parentHouse.getBuddies().add(newBuddy);
+            parentHouse.addBuddy(newBuddy);
 			session.saveOrUpdate(parentHouse);
 			tran.commit();
 		}
@@ -73,7 +71,7 @@ public class BuddyController {
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-        return newBuddy;
+        return new BuddyDTO(newBuddy);
     }
 
     @DeleteMapping("deleteBuddy")

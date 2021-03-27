@@ -11,12 +11,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.supersoft.thehood.dto.BuddyDTO;
-import com.supersoft.thehood.dto.CreditDTO;
-import com.supersoft.thehood.dto.DebitDTO;
 import com.supersoft.thehood.dto.HouseDTO;
 
 @Entity
@@ -27,30 +25,33 @@ public class House {
     @Column(name = "houseId")
     private int houseId;
 
+    @Column(name = "hoodId_")
+    private int hoodId;
+
     @Column(name = "houseCode")
     private String houseCode;
 
     @Column(name = "balance")
     private double balance;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "hoodId")
+    private Hood hood;
+
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "houseId")
     private Set<Buddy> buddies;
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "houseId")
     private Set<Debit> debits;
-
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "houseId")
-    private Set<Credit> credits;
 
     public House() {
         houseCode = "";
         balance = 0;
         buddies = new HashSet<Buddy>();
         debits = new HashSet<Debit>();
-        credits = new HashSet<Credit>();
+        hood = new Hood();
     }
 
     public House(String houseCode, double balance){
@@ -58,7 +59,7 @@ public class House {
         this.balance = balance;
         this.buddies = new HashSet<Buddy>();
         this.debits = new HashSet<Debit>();
-        this.credits = new HashSet<Credit>();
+        this.hood = new Hood();
     }
 
     public House(HouseDTO house){
@@ -67,23 +68,14 @@ public class House {
         this.balance = house.getBalance();
         this.buddies = new HashSet<Buddy>();
         this.debits = new HashSet<Debit>();
-        this.credits = new HashSet<Credit>();
-        for(BuddyDTO buddy : house.getBuddies())
-            this.buddies.add(new Buddy(buddy));
-        for(DebitDTO debit : house.getDebits())
-            this.debits.add(new Debit(debit));
-        for(CreditDTO credit : house.getCredits())
-            this.credits.add(new Credit(credit));
+        this.hood = null;
     }
 
     public void addDebit(Debit debit){
+        debit.setHoodId(this.hoodId);
+        debit.setHouseId(this.houseId);
         this.debits.add(debit);
         this.balance -= debit.getAmount();
-    }
-
-    public void addCredit(Credit credit){
-        this.credits.add(credit);
-        this.balance += credit.getAmount();
     }
 
     public int getHouseId() {
@@ -94,8 +86,10 @@ public class House {
         this.houseId = houseId;
     }
 
-    public Set<Buddy> getBuddies(){
-        return this.buddies;
+    public void addBuddy(Buddy buddy){
+        buddy.setHoodId(this.hoodId);
+        buddy.setHouseId(this.houseId);
+        this.buddies.add(buddy);
     }
 
     public String getHouseCode(){
@@ -125,9 +119,6 @@ public class House {
         for(Debit debit : debits)
             res.append(debit.toString() + System.lineSeparator());
 
-        for(Credit credit : credits)
-            res.append(credit.toString() + System.lineSeparator());
-
         return res.toString();
     }
 
@@ -135,20 +126,24 @@ public class House {
         this.buddies = buddies;
     }
 
-    public Set<Debit> getDebits() {
-        return debits;
-    }
-
     public void setDebits(Set<Debit> debits) {
         this.debits = debits;
     }
 
-    public Set<Credit> getCredits() {
-        return credits;
+    public Hood getHood() {
+        return hood;
     }
 
-    public void setCredits(Set<Credit> credits) {
-        this.credits = credits;
+    public void setHood(Hood hood) {
+        this.hood = hood;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
     
 }

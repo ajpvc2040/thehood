@@ -27,44 +27,43 @@ import org.springframework.web.bind.annotation.RestController;
 public class HouseController{
 
     @GetMapping("houses")
-    public List<House> getHouses(@RequestParam int hoodId) {
+    public List<HouseDTO> getHouses(@RequestParam int hoodId) {
 
         Transaction tran = null;
-        Hood parentHood = new Hood();
-        List<House> returnableList = new ArrayList<House>();
+        List<House> houses = new ArrayList<House>();
+        List<HouseDTO> returnableList = new ArrayList<HouseDTO>();
 
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             tran = session.beginTransaction();
 
-            Query query = session.createQuery("from Hood H where H.hoodId = :hoodID");
+            Query query = session.createQuery("from House H where H.hoodId = :hoodID");
+            
             query.setParameter("hoodID", hoodId);
-            parentHood = (Hood)query.getSingleResult();
+            houses = query.getResultList();
             tran.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for(House house : parentHood.getHouses())
-            returnableList.add(house);
+        for(House house : houses)
+            returnableList.add(new HouseDTO(house));
 
         return returnableList;
     }
 
     @PostMapping("newHouse")
-    public House newHouse(@RequestBody HouseDTO house) {
+    public HouseDTO newHouse(@RequestBody HouseDTO house) {
 
-        Hood parentHood;
+        Hood parentHood = null;
         House newHouse = new House(house);
         Transaction tran = null;
 
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            Query query = session.createQuery("from Hood H where H.hoodId = :hoodID");
-            query.setParameter("hoodID", house.getHoodId());
-            parentHood = (Hood)query.getSingleResult();
+            parentHood = (Hood) session.get(Hood.class, house.getHoodId());
 
-            parentHood.getHouses().add(newHouse);
+            parentHood.addHouse(newHouse);
 			session.saveOrUpdate(parentHood);
 			tran.commit();
 		}
@@ -72,7 +71,7 @@ public class HouseController{
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-        return newHouse;
+        return new HouseDTO(newHouse);
     }
 
     @DeleteMapping("deleteHouse")

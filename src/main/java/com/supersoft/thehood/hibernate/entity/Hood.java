@@ -14,10 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.supersoft.thehood.dto.BankDTO;
-import com.supersoft.thehood.dto.ExpenseDTO;
 import com.supersoft.thehood.dto.HoodDTO;
-import com.supersoft.thehood.dto.HouseDTO;
 
 @Entity
 @Table(name = "Hood")
@@ -34,21 +31,16 @@ public class Hood{
     @Column(name = "balance")
     private double balance;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hoodId")
     private Set<House> houses;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "hoodId")
-    private Set<Bank> bankEntries;
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "hoodId")
     private Set<Expense> expenses;
 
     public Hood(){
         this.houses = new HashSet<House>();
-        this.bankEntries = new HashSet<Bank>();
         this.expenses = new HashSet<Expense>();
         this.name = "";
         this.balance = 0;
@@ -57,45 +49,30 @@ public class Hood{
     public Hood(String name){
         this.name = name;
         this.houses = new HashSet<House>();
-        this.bankEntries = new HashSet<Bank>();
         this.expenses = new HashSet<Expense>();
         this.balance = 0;
     }
 
     public Hood(HoodDTO hood){
         this.name = hood.getName();
-        this.bankEntries = new HashSet<Bank>();
         this.expenses = new HashSet<Expense>();
         this.houses = new HashSet<House>();
-        for(BankDTO bank : hood.getBankEntries())
-            this.bankEntries.add(new Bank(bank));
-        for(ExpenseDTO expense : hood.getExpenses())
-            this.expenses.add(new Expense(expense));
-        for(HouseDTO house : hood.getHouses())
-            this.houses.add(new House(house));
         this.hoodId = hood.getHoodId();
     }
 
     public void addExpense(Expense expense){
+        expense.setHoodId(this.hoodId);
         this.expenses.add(expense);
         this.balance -= expense.getAmount();
     }
 
-    public void addBank(Credit credit){
-        this.bankEntries.add(new Bank(credit));
-        this.balance += credit.getAmount();
+    public void removeExpense(Expense expense){
+        this.balance += expense.getAmount();
     }
 
-    public Set<House> getHouses() {
-        return houses;
-    }
-
-    public Set<Bank> getBankEntries() {
-        return bankEntries;
-    }
-
-    public Set<Expense> getExpenses() {
-        return expenses;
+    public void addHouse(House house){
+        house.setHoodId(this.hoodId);
+        this.houses.add(house);
     }
     
     public int getHoodId() {
@@ -128,8 +105,6 @@ public class Hood{
         res.append("Hood [id=" + this.hoodId + ", name=" + this.name + "]" + System.lineSeparator());
         for(House house : houses)
             res.append(house.toString() + System.lineSeparator());
-        for(Bank bankEntry : bankEntries)
-            res.append(bankEntry.toString() + System.lineSeparator());
         for(Expense expense : expenses)
             res.append(expense.toString() + System.lineSeparator());
         return res.toString();
@@ -137,10 +112,6 @@ public class Hood{
 
     public void setHouses(Set<House> houses) {
         this.houses = houses;
-    }
-
-    public void setBankEntries(Set<Bank> bankEntries) {
-        this.bankEntries = bankEntries;
     }
 
     public void setExpenses(Set<Expense> expenses) {

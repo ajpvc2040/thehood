@@ -3,6 +3,8 @@ package com.supersoft.thehood.dto;
 import java.util.Calendar;
 import java.util.Date;
 
+import com.supersoft.thehood.hibernate.entity.Expense;
+
 public class ExpenseDTO {
     private int hoodId;
     private int expenseId;
@@ -11,11 +13,21 @@ public class ExpenseDTO {
     private double amount;
 
     public ExpenseDTO(){
+        hoodId = 0;
+        expenseId = 0;
         concept = "";
         Calendar today = Calendar.getInstance();
         today.set(Calendar.HOUR_OF_DAY, 0);
         expenseDate = today.getTime();
         amount = 0;
+    }
+
+    public ExpenseDTO(Expense expense){
+        this.hoodId = expense.getHoodId();
+        this.expenseId = expense.getExpenseId();
+        this.concept = expense.getConcept();
+        this.expenseDate = expense.getExpenseDate();
+        this.amount = expense.getAmount();
     }
 
     public int getExpenseId() {

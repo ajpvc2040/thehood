@@ -6,8 +6,6 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.supersoft.thehood.dto.CreditDTO;
-import com.supersoft.thehood.dto.DebitDTO;
-import com.supersoft.thehood.hibernate.entity.Bank;
 import com.supersoft.thehood.hibernate.entity.Credit;
 import com.supersoft.thehood.hibernate.entity.Debit;
 import com.supersoft.thehood.hibernate.entity.Hood;
@@ -32,146 +30,117 @@ import org.springframework.web.bind.annotation.RestController;
 public class CreditController {
 
     @GetMapping("credits")
-    public List<Credit> getCredits(@RequestParam int houseId) {
+    public List<CreditDTO> getCredits(@RequestParam int houseId) {
 
         Transaction tran = null;
-        House parentHouse = new House();
-        List<Credit> returnableList = new ArrayList<Credit>();
+        List<CreditDTO> returnableList = new ArrayList<CreditDTO>();
+        List<Credit> creditList = new ArrayList<Credit>();
 
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             tran = session.beginTransaction();
 
-            Query query = session.createQuery("from House H where H.houseId = :houseId");
+            Query query = session.createQuery(
+                " from " +
+                "     Credit C " +
+                " where " +
+                "     C.houseId = :houseId ");
+            
             query.setParameter("houseId", houseId);
-            parentHouse = (House)query.getSingleResult();
+            
+            creditList = query.getResultList();
+
             tran.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for(Credit credit : parentHouse.getCredits())
-            returnableList.add(credit);
+        for(Credit credit : creditList)
+            returnableList.add(new CreditDTO(credit));
 
         return returnableList;
     }
 
     @PostMapping("newCredit")
-    public Credit newCredit(@RequestBody CreditDTO credit) {
+    public CreditDTO newCredit(@RequestBody CreditDTO credit) {
+
+        Credit newCredit = new Credit(credit);
 
         Hood parentHood = new Hood();
         House parentHouse = new House();
-        Credit newCredit = new Credit(credit);
-        Debit debitPaid = new Debit();
-        Double alreadyPaid = 0.0;
+        Debit parentDebit = new Debit();
+
         Transaction tran = null;
-        Query query;
 
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            query = session.createQuery("from Hood H where H.hoodId = :hoodId");
-            query.setParameter("hoodId", credit.getHoodId());
-            parentHood = (Hood) query.getSingleResult();
+            parentHood = (Hood) session.get(Hood.class, credit.getHoodId());
+            parentHouse = (House) session.get(House.class, credit.getHouseId());
+            parentDebit = (Debit) session.get(Debit.class, credit.getDebitId());
 
-            for(House house : parentHood.getHouses())
-                if(house.getHouseId() == credit.getHouseId()){
-                    parentHouse = house;
-                    break;
-                }
+            parentDebit.loadLazyCredits();
 
-            for(Debit debit : parentHouse.getDebits())
-                if(debit.getDebitId() == credit.getDebitId()){
-                    debitPaid = debit;
-                    break;
-                }
-            
-            for(Credit creditAux : parentHouse.getCredits())
-                if(creditAux.getDebitId() == credit.getDebitId())
-                    alreadyPaid += creditAux.getAmount();
-
-            if(alreadyPaid + credit.getAmount() > debitPaid.getAmount())
+            if(credit.getAmount() > parentDebit.getUnpaidAmount())
                 throw new Exception("amount is greater than debit");
-            else if (alreadyPaid + credit.getAmount() == debitPaid.getAmount())
-                debitPaid.setPaid(true);
+            else if (credit.getAmount() == parentDebit.getUnpaidAmount())
+                parentDebit.setPaid(true);
 
-            parentHouse.addCredit(newCredit);
+            session.persist(newCredit);
 
-            session.saveOrUpdate(parentHood);
-            tran.commit();
+            parentDebit.addCredit(newCredit);
+            session.persist(parentDebit);
+
+            parentHouse.setBalance(parentHouse.getBalance() + newCredit.getAmount());
+            session.persist(parentHouse);
+
+            parentHood.setBalance(parentHood.getBalance() + newCredit.getAmount());
+            session.persist(parentHood);
+            session.flush();
 		}
 		catch(Exception e){
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
 
-        try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
-            tran = session.beginTransaction();
-            parentHood.addBank(newCredit);
-            session.saveOrUpdate(parentHood);
-            tran.commit();
-        }
-        catch(Exception e){
-			if(tran != null) tran.rollback();
-			e.printStackTrace();
-		}
-        return new Credit(credit);
+        return new CreditDTO(newCredit);
     }
 
     @DeleteMapping("deleteCredit")
     public void deleteCredit(@RequestBody CreditDTO credit){
+
         Hood parentHood = new Hood();
         House parentHouse = new House();
-        Credit deleteCredit = new Credit(credit);
-        Bank deleteBank = new Bank();
+        Debit parentDebit = new Debit();
+        Credit deleteCredit = new Credit();
+
         Transaction tran = null;
-        Query query;
 
         try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
-            query = session.createQuery("from Hood H where H.hoodId = :hoodId");
-            query.setParameter("hoodId", credit.getHoodId());
-            parentHood = (Hood) query.getSingleResult();
 
-            for(House house : parentHood.getHouses())
-                if(house.getHouseId() == credit.getHouseId()){
-                    parentHouse = house;
-                    break;
-                }
-            
-            for(Bank bank : parentHood.getBankEntries())
-                if(bank.getCreditId() == credit.getCreditId()){
-                    deleteBank = bank;
-                    break;
-                }
+            parentHood = (Hood) session.get(Hood.class, credit.getHoodId());
+            parentHouse = (House) session.get(House.class, credit.getHouseId());
+            parentDebit = (Debit) session.get(Debit.class, credit.getDebitId());
+            deleteCredit = (Credit) session.get(Credit.class, credit.getCreditId());
 
-            for(Debit debit : parentHouse.getDebits())
-                if(debit.getDebitId() == deleteCredit.getDebitId()){
-                    debit.setPaid(false);
-                    break;
-                }
-            
+            deleteCredit.loadLazyBank();
+
+            parentDebit.setPaid(false);            
             parentHood.setBalance(parentHood.getBalance() - credit.getAmount());
             parentHouse.setBalance(parentHouse.getBalance() - credit.getAmount());
 
-			session.saveOrUpdate(parentHood);
+            session.saveOrUpdate(parentDebit);
+            session.saveOrUpdate(parentHouse);
+            session.saveOrUpdate(parentHood);
+
+            session.delete(deleteCredit);
+
 			tran.commit();
 		}
 		catch(Exception e){
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-
-        try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
-			tran = session.beginTransaction();
-            session.delete(deleteBank);
-            session.delete(deleteCredit);
-            tran.commit();
-        }
-        catch(Exception e){
-			if(tran != null) tran.rollback();
-			e.printStackTrace();
-		}
-
     }
     
 }

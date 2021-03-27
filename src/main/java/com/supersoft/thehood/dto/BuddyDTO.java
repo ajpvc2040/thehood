@@ -1,7 +1,10 @@
 package com.supersoft.thehood.dto;
 
+import com.supersoft.thehood.hibernate.entity.Buddy;
+
 public class BuddyDTO {
     
+    private int hoodId;
     private int houseId;
     private int buddyId;
     private String name;
@@ -9,9 +12,21 @@ public class BuddyDTO {
     private String phone;
 
     public BuddyDTO(){
+        hoodId = 0;
+        houseId = 0;
+        buddyId = 0;
         name = "";
         email = "";
         phone = "";
+    }
+
+    public BuddyDTO(Buddy buddy){
+        this.hoodId = buddy.getHoodId();
+        this.houseId = buddy.getHouseId();
+        this.buddyId = buddy.getBuddyId();
+        this.name = buddy.getName();
+        this.email = buddy.getEmail();
+        this.phone = buddy.getPhone();
     }
 
     public int getHouseId() {
@@ -52,5 +67,13 @@ public class BuddyDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
     }
 }

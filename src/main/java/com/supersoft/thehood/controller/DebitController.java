@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.supersoft.thehood.dto.DebitDTO;
+import com.supersoft.thehood.hibernate.entity.Credit;
 import com.supersoft.thehood.hibernate.entity.Debit;
 import com.supersoft.thehood.hibernate.entity.Hood;
 import com.supersoft.thehood.hibernate.entity.House;
@@ -28,10 +29,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DebitController {
 
     @PostMapping("newDebit")
-    public Debit newDebit(@RequestBody DebitDTO debit) {
+    public DebitDTO newDebit(@RequestBody DebitDTO debit) {
 
-        Hood parentHood;
-        House parentHouse;
+        List<House> housesToCharge = new ArrayList<House>();
         Debit newDebit = new Debit(debit);
         Transaction tran = null;
         Query query;
@@ -40,50 +40,62 @@ public class DebitController {
 			tran = session.beginTransaction();
 
             if(debit.getHouseId() > 0){
-                query = session.createQuery("from House H where H.houseId = :houseId");
-                query.setParameter("houseId", debit.getHouseId());
-                parentHouse = (House) query.getSingleResult();
-                parentHouse.addDebit(newDebit);
-                session.saveOrUpdate(parentHouse);
+                House temp = (House) session.get(House.class, debit.getHouseId());
+                housesToCharge.add(temp);
             }
             else{
-                query = session.createQuery("from Hood H where H.hoodId = :hoodId");
+                query = session.createQuery("from House H where H.hoodId = :hoodId");
                 query.setParameter("hoodId", debit.getHoodId());
-                parentHood = (Hood) query.getSingleResult();
-                for(House house : parentHood.getHouses())
-                    house.addDebit(new Debit(newDebit));
-                session.saveOrUpdate(parentHood);
+                housesToCharge = query.getResultList();
             }
+            
+            for(House house : housesToCharge){
+                house.addDebit(new Debit(newDebit));
+                session.saveOrUpdate(house);
+            }
+
 			tran.commit();
 		}
 		catch(Exception e){
 			if(tran != null) tran.rollback();
 			e.printStackTrace();
 		}
-        return newDebit;
+        return new DebitDTO(newDebit);
     }
 
     @GetMapping("unpaidDebits")
-    public List<Debit> getUnpaidDebits(@RequestParam int houseId) {
+    public List<DebitDTO> getUnpaidDebits(@RequestParam int houseId) {
 
         Transaction tran = null;
-        House parentHouse = new House();
-        List<Debit> returnableList = new ArrayList<Debit>();
+        List<DebitDTO> returnableList = new ArrayList<DebitDTO>();
+        List<Debit> unpaidDebits = new ArrayList<Debit>();
+        Query query;
 
         try (Session session = HibernateUtil.getSessionFactory().getCurrentSession()) {
             tran = session.beginTransaction();
 
-            Query query = session.createQuery("from House H where H.houseId = :houseId");
+            query = session.createQuery(
+                " from " +
+                "     Debit D " +
+                " where " + 
+                "     D.houseId = :houseId and " +
+                "     D.paid = :paid ");
+
             query.setParameter("houseId", houseId);
-            parentHouse = (House)query.getSingleResult();
+            query.setParameter("paid", false);
+
+            unpaidDebits = query.getResultList();
+
+            for(Debit temp : unpaidDebits)
+                temp.loadLazyCredits();
+
             tran.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for(Debit debit : parentHouse.getDebits())
-            if(!debit.isPaid())
-                returnableList.add(debit);
+        for(Debit retDebit : unpaidDebits)
+            returnableList.add(new DebitDTO(retDebit));
 
         return returnableList;
     }

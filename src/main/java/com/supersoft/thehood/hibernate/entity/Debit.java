@@ -2,12 +2,19 @@ package com.supersoft.thehood.hibernate.entity;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.supersoft.thehood.dto.DebitDTO;
@@ -20,10 +27,16 @@ public class Debit {
     @Column(name = "debitId")
     private int debitId;
 
+    @Column(name = "hoodId_")
+    private int hoodId;
+
+    @Column(name = "houseId_")
+    private int houseId;
+
     @Column(name = "concept")
     private String concept;
 
-    @Column(name = "dabitDate")
+    @Column(name = "debitDate")
     private Date debitDate;
 
     @Column(name = "amount")
@@ -32,6 +45,14 @@ public class Debit {
     @Column(name = "paid")
     private boolean paid;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "houseId")
+    private House house;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "debitId")
+    private Set<Credit> credits;
+
     public Debit(){
         concept = "";
         Calendar today = Calendar.getInstance();
@@ -39,6 +60,7 @@ public class Debit {
         debitDate = today.getTime();
         amount = 0;
         paid = false;
+        credits = new HashSet<Credit>();
     }
 
     public Debit(String concept, Date debitDate, double amount){
@@ -46,6 +68,7 @@ public class Debit {
         this.debitDate = debitDate;
         this.amount = amount;
         this.paid = false;
+        credits = new HashSet<Credit>();
     }
 
     public Debit(Debit debit){
@@ -53,6 +76,7 @@ public class Debit {
         this.concept = debit.concept;
         this.debitDate = debit.debitDate;
         this.paid = debit.paid;
+        credits = new HashSet<Credit>();
     }
 
     public Debit(DebitDTO debit){
@@ -61,6 +85,11 @@ public class Debit {
         this.amount = debit.getAmount();
         this.debitId = debit.getDebitId();
         this.paid = debit.isPaid();
+        credits = new HashSet<Credit>();
+    }
+
+    public void loadLazyCredits(){
+        this.credits.size();
     }
 
     public int getDebitId() {
@@ -104,8 +133,50 @@ public class Debit {
         return "Debit [id=" + debitId + ", debitDate=" + debitDate.toString() + ", concept=" + concept + ", amount=" + amount + "]";
     }
 
+    public double getUnpaidAmount() {
+        double tempAmount = this.amount;
+        for(Credit credit : credits)
+            tempAmount -= credit.getAmount();
+        return tempAmount;
+    }
+
+    public House getHouse() {
+        return house;
+    }
+
+    public void setHouse(House house) {
+        this.house = house;
+    }
+
     public double getAmount() {
         return amount;
+    }
+
+    public void addCredit(Credit credit){
+        credit.setHoodId(this.hoodId);
+        credit.setHouseId(this.houseId);
+        credit.setDebitId(this.debitId);
+        this.credits.add(credit);
+    }
+
+    public void setCredits(Set<Credit> credits) {
+        this.credits = credits;
+    }
+
+    public int getHoodId() {
+        return hoodId;
+    }
+
+    public void setHoodId(int hoodId) {
+        this.hoodId = hoodId;
+    }
+
+    public int getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
 }
