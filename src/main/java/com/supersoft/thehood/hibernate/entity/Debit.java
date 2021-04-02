@@ -19,6 +19,8 @@ import javax.persistence.Table;
 
 import com.supersoft.thehood.dto.DebitDTO;
 
+import org.hibernate.annotations.Type;
+
 @Entity
 @Table(name = "Debit")
 public class Debit {    
@@ -27,10 +29,14 @@ public class Debit {
     @Column(name = "debitId")
     private int debitId;
 
-    @Column(name = "hoodId_")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "houseId")
+    private House house;
+
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
-    @Column(name = "houseId_")
+    @Column(name = "parentHouseId_")
     private int houseId;
 
     @Column(name = "concept")
@@ -43,11 +49,8 @@ public class Debit {
     private double amount;
 
     @Column(name = "paid")
-    private boolean paid;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "houseId")
-    private House house;
+    @Type(type= "org.hibernate.type.NumericBooleanType")
+    private Boolean paid;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "debitId")

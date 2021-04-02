@@ -74,9 +74,9 @@ public class CreditController {
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            parentHood = (Hood) session.get(Hood.class, credit.getHoodId());
-            parentHouse = (House) session.get(House.class, credit.getHouseId());
-            parentDebit = (Debit) session.get(Debit.class, credit.getDebitId());
+            parentHood = session.get(Hood.class, credit.getHoodId());
+            parentHouse = session.get(House.class, credit.getHouseId());
+            parentDebit = session.get(Debit.class, credit.getDebitId());
 
             parentDebit.loadLazyCredits();
 
@@ -118,10 +118,10 @@ public class CreditController {
         try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            parentHood = (Hood) session.get(Hood.class, credit.getHoodId());
-            parentHouse = (House) session.get(House.class, credit.getHouseId());
-            parentDebit = (Debit) session.get(Debit.class, credit.getDebitId());
-            deleteCredit = (Credit) session.get(Credit.class, credit.getCreditId());
+            parentHood = session.get(Hood.class, credit.getHoodId());
+            parentHouse = session.get(House.class, credit.getHouseId());
+            parentDebit = session.get(Debit.class, credit.getDebitId());
+            deleteCredit = session.get(Credit.class, credit.getCreditId());
 
             deleteCredit.loadLazyBank();
 

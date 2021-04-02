@@ -61,7 +61,7 @@ public class HouseController{
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            parentHood = (Hood) session.get(Hood.class, house.getHoodId());
+            parentHood = session.get(Hood.class, house.getHoodId());
 
             parentHood.addHouse(newHouse);
 			session.saveOrUpdate(parentHood);

@@ -27,7 +27,7 @@ public class Expense {
     @JoinColumn(name = "hoodId")
     private Hood hood;
 
-    @Column(name = "hoodId_")
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
     @Column(name = "concept")

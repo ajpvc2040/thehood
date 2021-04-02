@@ -24,10 +24,10 @@ public class Buddy{
     @JoinColumn(name = "houseId")
     private House house;
 
-    @Column(name = "hoodId_")
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
-    @Column(name = "houseId_")
+    @Column(name = "parentHouseId_")
     private int houseId;
 
     @Column(name = "name")

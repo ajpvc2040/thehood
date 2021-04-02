@@ -29,13 +29,13 @@ public class Credit {
     @JoinColumn(name = "debitId")
     private Debit debit;
 
-    @Column(name = "hoodId_")
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
-    @Column(name = "houseId_")
+    @Column(name = "parentHouseId_")
     private int houseId;
 
-    @Column(name = "debitId_")
+    @Column(name = "parentDebitId_")
     private int debitId;
 
     @Column(name = "concept")

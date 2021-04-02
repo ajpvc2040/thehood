@@ -25,7 +25,7 @@ public class House {
     @Column(name = "houseId")
     private int houseId;
 
-    @Column(name = "hoodId_")
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
     @Column(name = "houseCode")

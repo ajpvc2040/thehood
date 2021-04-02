@@ -6,9 +6,7 @@ import java.util.List;
 import javax.persistence.Query;
 
 import com.supersoft.thehood.dto.DebitDTO;
-import com.supersoft.thehood.hibernate.entity.Credit;
 import com.supersoft.thehood.hibernate.entity.Debit;
-import com.supersoft.thehood.hibernate.entity.Hood;
 import com.supersoft.thehood.hibernate.entity.House;
 import com.supersoft.thehood.hibernate.util.HibernateUtil;
 
@@ -40,7 +38,7 @@ public class DebitController {
 			tran = session.beginTransaction();
 
             if(debit.getHouseId() > 0){
-                House temp = (House) session.get(House.class, debit.getHouseId());
+                House temp = session.get(House.class, debit.getHouseId());
                 housesToCharge.add(temp);
             }
             else{

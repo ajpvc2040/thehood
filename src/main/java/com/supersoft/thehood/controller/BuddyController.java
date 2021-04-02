@@ -61,7 +61,7 @@ public class BuddyController {
 		try(Session session = HibernateUtil.getSessionFactory().getCurrentSession()){
 			tran = session.beginTransaction();
 
-            parentHouse = (House)session.get(House.class, buddy.getHouseId());
+            parentHouse = session.get(House.class, buddy.getHouseId());
 
             parentHouse.addBuddy(newBuddy);
 			session.saveOrUpdate(parentHouse);

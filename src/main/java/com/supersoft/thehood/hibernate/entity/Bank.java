@@ -28,16 +28,16 @@ public class Bank {
     @JoinColumn(name = "creditId")
     private Credit credit;
 
-    @Column(name = "hoodId_")
+    @Column(name = "parentHoodId_")
     private int hoodId;
 
-    @Column(name = "houseId_")
+    @Column(name = "parentHouseId_")
     private int houseId;
 
-    @Column(name = "debitId_")
+    @Column(name = "parentDebitId_")
     private int debitId;
 
-    @Column(name = "creditId_")
+    @Column(name = "parentCreditId_")
     private int creditId;
 
     @Column(name = "incomeDate")
