@@ -1,6 +1,6 @@
 <persistence>
     <persistence-unit name="my-persistence-unit" transaction-type="JTA">
-       
+      <!-- 
       <properties>
         <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
          
@@ -11,6 +11,6 @@
         <property name="javax.persistence.schema-generation.drop-script-source" value="drop.sql"/>
          
         <property name="javax.persistence.sql-load-script-source" value="data.sql"/>
-      </properties>
+      </properties>-->
     </persistence-unit>
   </persistence>

@@ -1,0 +1,26 @@
+// clean and install
+mvn clean install
+
+// run app
+java -jar thehood-0.0.1-SNAPSHOT.jar
+
+// change directory
+cd docker
+
+// build the image
+docker build -t thehood-api .
+
+// list the image
+docker images
+
+// run the container
+docker run -d -p 8080:8080 --name thehood thehood-api
+
+// list the container
+docker ps
+
+// logs
+docker logs thehood
+
+// exec into running container
+docker exec -it thehood /bin/sh

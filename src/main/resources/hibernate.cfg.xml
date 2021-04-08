@@ -2,22 +2,23 @@
  <!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
  <hibernate-configuration>
    <session-factory>
-     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-     <property name="connection.url">jdbc:mysql://localhost:3306/thehood</property>
-     <property name="connection.username">root</property>
-     <property name="connection.password">supersofttrc</property>
-     <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
-     <property name="hibernate.show_sql">true</property>
-     <property name="hibernate.current_session_context_class">thread</property>
+    <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <property name="connection.url">jdbc:mysql://thehood.cu9hkp7ymhwc.us-east-2.rds.amazonaws.com:3306/thehood</property>
+    <property name="connection.username">root</property>
+    <property name="connection.password">supersofttrc</property>
+    <property name="dialect">org.hibernate.dialect.MySQL5Dialect</property>
+    <property name="hibernate.show_sql">true</property>
+    <property name="hibernate.current_session_context_class">thread</property>
 
-     <mapping class="com.supersoft.thehood.hibernate.entity.Bank"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.Buddy"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.Credit"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.Debit"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.Expense"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.Hood"/>
-     <mapping class="com.supersoft.thehood.hibernate.entity.House"/>
-     
+    <mapping class="com.supersoft.thehood.hibernate.entity.Bank"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.Buddy"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.Credit"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.Debit"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.Expense"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.Hood"/>
+    <mapping class="com.supersoft.thehood.hibernate.entity.House"/>
 
+    <mapping class="com.supersoft.thehood.hibernate.entity.User"/>
    </session-factory>
  </hibernate-configuration>

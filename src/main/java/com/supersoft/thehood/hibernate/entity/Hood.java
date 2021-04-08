@@ -39,9 +39,14 @@ public class Hood{
     @JoinColumn(name = "hoodId")
     private Set<Expense> expenses;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "hoodId")
+    private Set<User> users;
+
     public Hood(){
         this.houses = new HashSet<House>();
         this.expenses = new HashSet<Expense>();
+        this.users = new HashSet<User>();
         this.name = "";
         this.balance = 0;
     }
@@ -50,6 +55,7 @@ public class Hood{
         this.name = name;
         this.houses = new HashSet<House>();
         this.expenses = new HashSet<Expense>();
+        this.users = new HashSet<User>();
         this.balance = 0;
     }
 
@@ -57,6 +63,7 @@ public class Hood{
         this.name = hood.getName();
         this.expenses = new HashSet<Expense>();
         this.houses = new HashSet<House>();
+        this.users = new HashSet<User>();
         this.hoodId = hood.getHoodId();
     }
 
@@ -73,6 +80,11 @@ public class Hood{
     public void addHouse(House house){
         house.setHoodId(this.hoodId);
         this.houses.add(house);
+    }
+
+    public void addUser(User user){
+        user.setHoodId(this.hoodId);
+        this.users.add(user);
     }
     
     public int getHoodId() {
