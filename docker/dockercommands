@@ -1,3 +1,6 @@
+//prepare mvn
+export PATH=/Users/artemiojorgeamayahernandez/Documents/apache-maven-3.6.3/bin:$PATH
+
 // clean and install
 mvn clean install
 
@@ -24,3 +27,19 @@ docker logs thehood
 
 // exec into running container
 docker exec -it thehood /bin/sh
+
+// login AWS ECR - docker for 12 hrs
+aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 665123843124.dkr.ecr.us-east-2.amazonaws.com
+
+// create repository in AWS ECR
+aws ecr create-repository \
+    --repository-name thehood-api \
+    --image-scanning-configuration scanOnPush=true \
+    --region us-east-2
+
+// tag docker image
+docker tag thehood-api:latest 665123843124.dkr.ecr.us-east-2.amazonaws.com/thehood-api:latest
+
+// push docker image to ECR
+docker push 665123843124.dkr.ecr.us-east-2.amazonaws.com/thehood-api:latest
+
